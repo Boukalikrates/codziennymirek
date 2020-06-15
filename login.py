@@ -6,7 +6,7 @@ import json
 import sys
 
 f = open(sys.path[0]+'/credentials.json', 'r')
-credentials = json.load(f.read())
+credentials = json.loads(f.read())
 login = credentials['login']
 appkey = credentials['appkey']
 secret = credentials['secret']

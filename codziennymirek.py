@@ -39,20 +39,18 @@ svgfile = '''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 </svg>'''
 
 
-
-
 def searchranklist():
     bpage = int(math.ceil(desirednumber/25.0))
     hpage = bpage+1
     for j in range(50):
         print('searching page {0}'.format(bpage))
-        ranklist = getranklist( bpage)
+        ranklist = getranklist(bpage)
         #print ( ranklist)
-        for i  in ranklist['data']:
+        for i in ranklist['data']:
             if i['rank'] == desirednumber and i['login'] not in blacklist:
                 return i
         print('searching page {0}'.format(hpage))
-        ranklist = getranklist( hpage)
+        ranklist = getranklist(hpage)
         for i in ranklist['data']:
             if i['rank'] == desirednumber and i['login'] not in blacklist:
                 return i
@@ -77,41 +75,45 @@ def getcolors(code):
         return colorlist[str(code)]
     return 'ff5917'
 
+
 def getsex(code):
     sexlist = {
-        'male':'46ABF2',
-        'female':'F246D0'
+        'male': '46ABF2',
+        'female': 'F246D0'
     }
     if str(code) in sexlist:
         return sexlist[str(code)]
     return 'ffffff'
 
+
 def downloadimages(data):
-  if generateimage or sendtoserver:
-    isavatar = isbackground = False
-    if 'background' in data:
-        isbackground = True
-        bgcommand = 'wget {0} -O background.jpg'.format(data['background'].replace(',w',',').replace(',q',','))
-        os.system(bgcommand)
+    if generateimage or sendtoserver:
+        isavatar = isbackground = False
+        if 'background' in data:
+            isbackground = True
+            bgcommand = 'wget {0} -O background.jpg'.format(
+                data['background'].replace(',w', ',').replace(',q', ','))
+            os.system(bgcommand)
 
-    if 'avatar' in data:
-        isavatar = True
-        bgcommand = 'wget {0} -O avatar.jpg'.format(data['avatar'].replace(',w',',').replace(',q',','))
-        os.system(bgcommand)
+        if 'avatar' in data:
+            isavatar = True
+            bgcommand = 'wget {0} -O avatar.jpg'.format(
+                data['avatar'].replace(',w', ',').replace(',q', ','))
+            os.system(bgcommand)
 
-    svg = svgfile.format(
-        login=data['login'],
-        rank=data['rank'],
-        sex=getsex(data['sex']) if 'sex' in data else 'ffffff',
-        color=getcolors(data['color']),
-        isbackground='' if 'background' in data else 'none',
-        isavatar='' if 'avatar' in data else 'none'
-    )
-    f = open('profile.svg', 'w')
-    f.write(svg)
-    f.close()
-    os.system('inkscape -z -e {0}.png profile.svg'.format(data['login']))
-    os.system('rm -f background.jpg ; rm -f avatar.jpg ; rm -f profile.svg')
+        svg = svgfile.format(
+            login=data['login'],
+            rank=data['rank'],
+            sex=getsex(data['sex']) if 'sex' in data else 'ffffff',
+            color=getcolors(data['color']),
+            isbackground='' if 'background' in data else 'none',
+            isavatar='' if 'avatar' in data else 'none'
+        )
+        f = open('profile.svg', 'w')
+        f.write(svg)
+        f.close()
+        os.system('inkscape -z -e {0}.png profile.svg'.format(data['login']))
+        os.system('rm -f background.jpg ; rm -f avatar.jpg ; rm -f profile.svg')
 
 
 def sendmessage(data):
@@ -138,7 +140,7 @@ if __name__ == "__main__":
     -s \t generate an image and send to server
 
     With no arguments the profile in given place is shown. The default number is {1}.
-        '''.format(sys.argv[0],desirednumber))
+        '''.format(sys.argv[0], desirednumber))
     else:
 
         for i in sys.argv:
@@ -158,4 +160,3 @@ if __name__ == "__main__":
         else:
             failmessage()
             pass
-
